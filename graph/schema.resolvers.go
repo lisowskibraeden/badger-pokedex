@@ -176,7 +176,7 @@ func (r *queryResolver) Allpokenoalt(ctx context.Context) ([]*model.Pokemon, err
 		}
 	}
 	db.MapperFunc(func(s string) string { return s })
-	statement, err := db.Preparex("SELECT * FROM Pokemon WHERE Alternate is NULL")
+	statement, err := db.Preparex("SELECT * FROM Pokemon WHERE Alternate is NULL ORDER BY Num ASC")
 	if err != nil {
 		return nil, err
 	}
