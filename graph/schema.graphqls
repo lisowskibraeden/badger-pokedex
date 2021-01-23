@@ -50,6 +50,7 @@ type Pokemon {
   eggCycle: Int!
   preEvolutionID: Int
   evolutionDetails: String
+  image: String
 }
 
 type Query {

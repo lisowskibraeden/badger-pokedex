@@ -66,6 +66,7 @@ type ComplexityRoot struct {
 		HiddenAbil         func(childComplexity int) int
 		HiddenAbilDesc     func(childComplexity int) int
 		ID                 func(childComplexity int) int
+		Image              func(childComplexity int) int
 		Legendary          func(childComplexity int) int
 		MaleRatio          func(childComplexity int) int
 		Name               func(childComplexity int) int
@@ -288,6 +289,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Pokemon.ID(childComplexity), true
+
+	case "Pokemon.image":
+		if e.complexity.Pokemon.Image == nil {
+			break
+		}
+
+		return e.complexity.Pokemon.Image(childComplexity), true
 
 	case "Pokemon.legendary":
 		if e.complexity.Pokemon.Legendary == nil {
@@ -633,6 +641,7 @@ type Pokemon {
   eggCycle: Int!
   preEvolutionID: Int
   evolutionDetails: String
+  image: String
 }
 
 type Query {
@@ -2398,6 +2407,38 @@ func (ec *executionContext) _Pokemon_evolutionDetails(ctx context.Context, field
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Pokemon_image(ctx context.Context, field graphql.CollectedField, obj *model.Pokemon) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Pokemon",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Image, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_pokemons(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4054,6 +4095,8 @@ func (ec *executionContext) _Pokemon(ctx context.Context, sel ast.SelectionSet, 
 			out.Values[i] = ec._Pokemon_preEvolutionID(ctx, field, obj)
 		case "evolutionDetails":
 			out.Values[i] = ec._Pokemon_evolutionDetails(ctx, field, obj)
+		case "image":
+			out.Values[i] = ec._Pokemon_image(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

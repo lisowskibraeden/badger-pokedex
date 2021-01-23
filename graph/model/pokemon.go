@@ -50,4 +50,5 @@ type Pokemon struct {
 	EggCycle           int     `json:"eggCycle"`
 	PreEvolutionID     *int    `json:"preEvolutionID"`
 	EvolutionDetails   *string `json:"evolutionDetails"`
+	Image              *string `json:"image"`
 }
