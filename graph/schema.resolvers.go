@@ -5,7 +5,7 @@ package graph
 
 import (
 	"context"
-	"fmt"
+	"strconv"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/lisowskibraeden/gqlgen-todos/graph/generated"
@@ -202,7 +202,69 @@ func (r *queryResolver) Allpokenoalt(ctx context.Context) ([]*model.Pokemon, err
 }
 
 func (r *queryResolver) Search(ctx context.Context, query string) ([]*model.Pokemon, error) {
-	panic(fmt.Errorf("not implemented"))
+	if db == nil {
+		var err error
+		db, err = sqlx.Open("sqlite3", "./PokemonDatabase.db")
+		if err != nil {
+			return nil, err
+		}
+	}
+	db.MapperFunc(func(s string) string { return s })
+	if number, err := strconv.Atoi(query); err == nil {
+		if err != nil {
+			return nil, err
+		}
+		statement, err := db.Preparex("SELECT * FROM Pokemon WHERE Num = ?")
+		if err != nil {
+			return nil, err
+		}
+		defer statement.Close()
+		rows, err := statement.Queryx(number)
+		_ = rows
+		if err != nil {
+			return nil, err
+		}
+		defer rows.Close()
+		var pokemen []*model.Pokemon
+		for rows.Next() {
+			i := model.Pokemon{}
+			err := rows.StructScan(&i)
+			if err != nil {
+				return nil, err
+			}
+			pokemen = append(pokemen, &i)
+		}
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+		return pokemen, nil
+
+	} else {
+		statement, err := db.Preparex("SELECT * FROM Pokemon WHERE Name LIKE ?")
+		if err != nil {
+			return nil, err
+		}
+		defer statement.Close()
+		rows, err := statement.Queryx(query + "%")
+		_ = rows
+		if err != nil {
+			return nil, err
+		}
+		defer rows.Close()
+		var pokemen []*model.Pokemon
+		for rows.Next() {
+			i := model.Pokemon{}
+			err := rows.StructScan(&i)
+			if err != nil {
+				return nil, err
+			}
+			pokemen = append(pokemen, &i)
+		}
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+		return pokemen, nil
+	}
 }
 
 // Query returns generated.QueryResolver implementation.

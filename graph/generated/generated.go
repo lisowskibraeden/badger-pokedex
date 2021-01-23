@@ -651,7 +651,7 @@ type Query {
   pokenum(num:Int!): [Pokemon!]!
   pokenumrange(start:Int!, end:Int!): [Pokemon!]!
   allpokenoalt: [Pokemon!]!
-  search(query:String!): [Pokemon!]!
+  search(query: String!): [Pokemon!]!
 }
 `, BuiltIn: false},
 }
