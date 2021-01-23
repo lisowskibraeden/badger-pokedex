@@ -168,7 +168,37 @@ func (r *queryResolver) Pokenumrange(ctx context.Context, start int, end int) ([
 }
 
 func (r *queryResolver) Allpokenoalt(ctx context.Context) ([]*model.Pokemon, error) {
-	panic(fmt.Errorf("not implemented"))
+	if db == nil {
+		var err error
+		db, err = sqlx.Open("sqlite3", "./PokemonDatabase.db")
+		if err != nil {
+			return nil, err
+		}
+	}
+	db.MapperFunc(func(s string) string { return s })
+	statement, err := db.Preparex("SELECT * FROM Pokemon WHERE Alternate is NULL")
+	if err != nil {
+		return nil, err
+	}
+	defer statement.Close()
+	rows, err := statement.Queryx()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var pokemen []*model.Pokemon
+	for rows.Next() {
+		i := model.Pokemon{}
+		err := rows.StructScan(&i)
+		if err != nil {
+			return nil, err
+		}
+		pokemen = append(pokemen, &i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return pokemen, nil
 }
 
 func (r *queryResolver) Search(ctx context.Context, query string) ([]*model.Pokemon, error) {
