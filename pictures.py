@@ -11,7 +11,7 @@ pokemon = []
 for i in range(len(dbpokemon)):
     pokemon.append(dbpokemon[i][2].lower().replace('\'', '').replace(' (male)', '-m').replace(' (female)', '-f').replace(' ', '-').replace('.', '').replace(':', '')
         .replace('urshifu', 'urshifu-single-strike').replace('oricorio', 'oricorio-baile').replace('wishiwashi', 'wishiwashi-solo').replace('shaymin', 'shaymin-land')
-        .replace('giratina', 'giratina-altered').replace('lycanroc', 'lycanroc-midday').replace('morpeko', 'morpeko-full-belly'))
+        .replace('giratina', 'giratina-altered').replace('lycanroc', 'lycanroc-midday').replace('morpeko', 'morpeko-full-belly').replace('eiscue', 'eiscue-ice').replace('flabébé', 'flabebe'))
 try:
     cur.execute('ALTER TABLE Pokemon ADD COLUMN Image varchar(32)')
 except:
