@@ -1,0 +1,63 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+type Pokemon {
+  id: Int!
+  num: Int!
+  name: String!
+  classification: String!
+  alternate: String
+  og: String
+  legendary: String
+  height: Float!
+  weight: Float!
+  primType: String!
+  secType: String
+  primAbil: String!
+  primAbilDesc: String!
+  secAbil: String
+  secAbilDesc: String
+  hiddenAbil: String
+  hiddenAbilDesc: String
+  specEventAbil: String
+  specEventAbilDesc: String
+  maleRatio: Float!
+  femaleRatio: Float!
+  baseHappy: Int!
+  gameOrigin: String!
+  regionOrigin: String!
+  healthStat: Int!
+  attackStat: Int!
+  defenseStat: Int!
+  specialAttackStat: Int!
+  specialDefenseStat: Int!
+  speedStat: Int!
+  baseStatTotal: Int!
+  healthEV: Int!
+  attackEV: Int!
+  defenseEV: Int!
+  specialAttackEV: Int!
+  specialDefenseEV: Int!
+  speedEV: Int!
+  evYieldTotal: Int!
+  catchRate: Int!
+  expGrowth: String!
+  expGrowthTotal: Int!
+  expYield: Int!
+  primEggGroup: String!
+  secEggGroup: String!
+  eggCycle: Int!
+  preEvolutionID: Int
+  evolutionDetails: String
+}
+
+type Query {
+  pokemons: [Pokemon!]!
+  pokemon(id:Int!): Pokemon!
+  evolutions(id:Int!): [Pokemon!]!
+  pokenum(num:Int!): [Pokemon!]!
+  pokenumrange(start:Int!, end:Int!): [Pokemon!]!
+  allpokenoalt: [Pokemon!]!
+  search(query:String!): [Pokemon!]!
+}
