@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useViewportScroll } from "framer-motion";
 import NextLink from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { FaMoon, FaSun, FaSearch } from "react-icons/fa";
 
 const GithubIcon = (props) => (
@@ -45,17 +45,14 @@ const Logo = (props) => (
   </svg>
 );
 
-function HeaderContent({search, handleChange}) {
+function HeaderContent() {
   const mobileNav = useDisclosure();
 
   const { toggleColorMode: toggleMode } = useColorMode();
   const text = useColorModeValue("dark", "light");
   const SwitchIcon = useColorModeValue(FaMoon, FaSun);
-  const mobileNavBtnRef = React.useRef();
 
-  useUpdateEffect(() => {
-    mobileNavBtnRef.current?.focus();
-  }, [mobileNav.isOpen]);
+  const [query, updateQuery] = useState('');
 
   return (
     <>
@@ -96,7 +93,7 @@ function HeaderContent({search, handleChange}) {
                 />
               }
             />
-            <Input placeHolder="Search" variant="filled" />
+            <Input placeHolder="Search" variant="filled" value={query} onChange={e => updateQuery(e.target.value)} />
           </InputGroup>
         </Flex>
 

@@ -5,7 +5,7 @@ import LazyLoad from "react-lazyload";
 
 export default function PokeTile(props) {
   return (
-    <Link href={"/" + props.num}>
+    <Link href={"/" + props.image}>
       <div className="pokeTile">
         <Box borderRadius="lg" overflow="hidden" background="#fff">
           <LazyLoad height={64} offset={64}>
