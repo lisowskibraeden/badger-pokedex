@@ -53,16 +53,16 @@ const Logo = (props) => (
 );
 
 async function getSearchResults(query) {
-const res = await fetch("http://localhost:8080/query", {
+const res = await fetch("http://45.76.230.252:8080/query", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
     query:
-      "{ search(page: 1, limit: 10, query: \"" +
+      '{ search(page: 1, limit: 10, query: "' +
       query +
-      "\") {num name classification primType secType image}}",
+      '") {num name classification primType secType image}}',
   }),
 });
 const { search } = (await res.json()).data;
