@@ -275,7 +275,7 @@ func (r *queryResolver) Search(ctx context.Context, query string, page int, limi
 		return pokemen, nil
 
 	} else {
-		statement, err := db.Preparex("SELECT * FROM Pokemon WHERE Name LIKE ? ORDER BY  LIMIT ? OFFSET ?")
+		statement, err := db.Preparex("SELECT * FROM Pokemon WHERE Name LIKE ? ORDER BY Num LIMIT ? OFFSET ?")
 		if err != nil {
 			return nil, err
 		}
