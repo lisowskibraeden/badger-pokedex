@@ -217,7 +217,7 @@ function HeaderContent() {
                   </Tbody>
                 </Table>
               ) : (
-                <Text>{isSearching ? "Searching..." : "No Results Found"}</Text>
+                <Text p="20px">{isSearching ? "Searching..." : "No Results Found"}</Text>
               )}
             </Box>
           )}
