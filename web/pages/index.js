@@ -112,6 +112,25 @@ export default function Home({ pokemons }) {
           box-sizing: border-box;
         }
       `}</style>
+
+      <style jsx global>{`
+        .pokeTile {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 5px;
+          cursor: pointer;
+          font-weight: 700;
+          text-align: center;
+        }
+
+        .pokeTile span {
+          opacity: 0.7;
+          font-size: 0.8em;
+          font-weight: 500;
+        }
+      `}</style>
     </div>
   );
 }
