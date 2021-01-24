@@ -69,6 +69,7 @@ export default function Pokemon({ pokemons, evolutions, previous, next }) {
                   borderWidth="1px"
                   padding="20px"
                   mb="20px"
+                  maxW="500px"
                 >
                   <Stack>
                     <Heading>
@@ -83,6 +84,7 @@ export default function Pokemon({ pokemons, evolutions, previous, next }) {
                       overflow="hidden"
                       background="#fff"
                       width="384px"
+                      maxW="100%"
                     >
                       <Image
                         boxSize="384px"
@@ -115,13 +117,13 @@ export default function Pokemon({ pokemons, evolutions, previous, next }) {
                     </div>
                   </Stack>
                 </Container>
-                <Container borderRadius="lg" borderWidth="1px" padding="20px">
-                  <Heading size="md">Stats</Heading>
+                <Container borderRadius="lg" borderWidth="1px" padding="20px" maxW="640px">
+                  <Heading size="lg">Stats</Heading>
                   <Table>
                     <colgroup>
                       <col span="1" style={{ width: "33%" }} />
-                      <col span="1" style={{ width: "23%" }} />
-                      <col span="1" style={{ width: "43%" }} />
+                      <col span="1" style={{ width: "15%" }} />
+                      <col span="1" style={{ width: "51%" }} />
                     </colgroup>
                     <Tbody>
                       <Tr>
@@ -194,46 +196,68 @@ export default function Pokemon({ pokemons, evolutions, previous, next }) {
                   </Table>
                 </Container>
               </Flex>
-              <Stack alignItems="center">
-                {evolutions.map((stage, i) => (
-                  <>
-                    {i != 0 && <Icon as={FaArrowDown} />}
-                    <Wrap key={stage[0].name + i}>
-                      {stage
-                        .filter((p) => !p.alternate)
-                        .map((p) => (
-                          <WrapItem key={p.name}>
-                            <NextLink href={"/" + p.image}>
-                              <Box
-                                borderRadius="lg"
-                                overflow="hidden"
-                                background="#fff"
-                                width="128px"
-                                cursor="pointer"
-                                borderWidth="5px"
-                                borderColor={
-                                  p.num == pokemons[0].num
-                                    ? "cyan.500"
-                                    : "gray.500"
-                                }
-                              >
-                                <Image
-                                  boxSize="128px"
-                                  objectFit="contain"
-                                  src={"/pictures/" + p.image + ".jpg"}
-                                  alt={p.name}
-                                  fallback={
-                                    <Box width="128px" height="128px" />
-                                  }
-                                />
-                              </Box>
-                            </NextLink>
-                          </WrapItem>
-                        ))}
-                    </Wrap>
-                  </>
-                ))}
-              </Stack>
+              <Flex maxWidth="100%" justifyContent="center">
+                <Container
+                  borderRadius="lg"
+                  borderWidth="1px"
+                  padding="20px"
+                  mb="20px"
+                  maxW="100%"
+                  w="auto"
+                  minW="300px"
+                >
+                  <Heading size="lg" mt="-10px" mb="10px">
+                    Evolutions
+                  </Heading>
+                  <Stack alignItems="center">
+                    {evolutions.map((stage, i) => (
+                      <>
+                        {i != 0 && (
+                          <Icon
+                            w="7"
+                            h="7"
+                            as={FaArrowDown}
+                            color="gray.500"
+                          />
+                        )}
+                        <Wrap key={stage[0].name + i} justify="center">
+                          {stage
+                            .filter((p) => !p.alternate)
+                            .map((p) => (
+                              <WrapItem key={p.name}>
+                                <NextLink href={"/" + p.image}>
+                                  <Box
+                                    borderRadius="lg"
+                                    overflow="hidden"
+                                    background="#fff"
+                                    width="128px"
+                                    cursor="pointer"
+                                    borderWidth="5px"
+                                    borderColor={
+                                      p.num == pokemons[0].num
+                                        ? "cyan.500"
+                                        : "gray.500"
+                                    }
+                                  >
+                                    <Image
+                                      boxSize="128px"
+                                      objectFit="contain"
+                                      src={"/pictures/" + p.image + ".jpg"}
+                                      alt={p.name}
+                                      fallback={
+                                        <Box width="128px" height="128px" />
+                                      }
+                                    />
+                                  </Box>
+                                </NextLink>
+                              </WrapItem>
+                            ))}
+                        </Wrap>
+                      </>
+                    ))}
+                  </Stack>
+                </Container>
+              </Flex>
             </Stack>
           </Container>
         </Box>

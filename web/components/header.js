@@ -2,6 +2,7 @@ import {
   Box,
   chakra,
   Flex,
+  Heading,
   HStack,
   Icon,
   IconButton,
@@ -11,6 +12,7 @@ import {
   InputLeftElement,
   Link,
   Table,
+  Tag,
   Tbody,
   Td,
   Text,
@@ -22,6 +24,7 @@ import {
 } from "@chakra-ui/react";
 import { useViewportScroll } from "framer-motion";
 import NextLink from "next/link";
+import { typeColors, typeTextColors } from "pokemon";
 import React, { useEffect, useState } from "react";
 import { FaMoon, FaSun, FaSearch } from "react-icons/fa";
 
@@ -53,41 +56,37 @@ const Logo = (props) => (
 );
 
 async function getSearchResults(query) {
-const res = await fetch("https://pokemon.winans.codes/query", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    query:
-      '{ search(page: 1, limit: 10, query: "' +
-      query +
-      '") {num name classification primType secType image}}',
-  }),
-});
-const { search } = (await res.json()).data;
+  const res = await fetch("https://pokemon.winans.codes/query", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query:
+        '{ search(page: 1, limit: 10, query: "' +
+        query +
+        '") {num name classification primType secType image}}',
+    }),
+  });
+  const { search } = (await res.json()).data;
 
-return search;
+  return search;
 }
 
 function useDebounce(value, delay) {
   // State and setters for debounced value
   const [debouncedValue, setDebouncedValue] = useState(value);
 
-  useEffect(
-    () => {
-      // Set debouncedValue to value (passed in) after the specified delay
-      const handler = setTimeout(() => {
-        setDebouncedValue(value);
-      }, delay);
+  useEffect(() => {
+    // Set debouncedValue to value (passed in) after the specified delay
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
 
-      return () => {
-        clearTimeout(handler);
-      };
-    },
-
-    [value]
-  );
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value]);
 
   return debouncedValue;
 }
@@ -99,10 +98,9 @@ function HeaderContent() {
   const text = useColorModeValue("dark", "light");
   const SwitchIcon = useColorModeValue(FaMoon, FaSun);
 
-  const [query, updateQuery] = useState('');
+  const [query, updateQuery] = useState("");
 
   const [isSearching, setIsSearching] = useState(false);
-
 
   const debouncedQuery = useDebounce(query, 300);
 
@@ -140,11 +138,10 @@ function HeaderContent() {
           justify="flex-end"
           align="center"
           maxW="600px"
-          color="gray.400"
           position="relative"
           className="searchFocus"
         >
-          <InputGroup width="100%">
+          <InputGroup width="100%" color="gray.400">
             <InputLeftElement
               pointerEvents="none"
               children={
@@ -180,14 +177,14 @@ function HeaderContent() {
                 <Table>
                   <Tbody>
                     {searchResults.map((r) => (
-                      <Tr key={r.num}>
-                        <Td>
-                          <NextLink href={"/" + r.image}>
-                            <Flex
-                              alignItems="center"
-                              onClick={() => updateQuery("")}
-                              cursor="pointer"
-                            >
+                      <NextLink href={"/" + r.image}>
+                        <Tr
+                          key={r.num}
+                          onClick={() => updateQuery("")}
+                          cursor="pointer"
+                        >
+                          <Td>
+                            <Flex alignItems="center">
                               <Box
                                 borderRadius="lg"
                                 overflow="hidden"
@@ -206,18 +203,36 @@ function HeaderContent() {
                                 {r.name} - #{r.num.toString().padStart(3, "0")}
                               </Text>
                               <Text>
-                                {r.primType}
-                                {r.secType ? " - " + r.secType : null}
+                                <Tag
+                                  size="md"
+                                  mr="5px"
+                                  ml="5px"
+                                  bgColor={typeColors[r.primType]}
+                                  color={typeTextColors[r.primType]}
+                                >
+                                  {r.primType}
+                                </Tag>
+                                {r.secType ? (
+                                  <Tag
+                                    size="md"
+                                    bgColor={typeColors[r.secType]}
+                                    color={typeTextColors[r.secType]}
+                                  >
+                                    {r.secType}
+                                  </Tag>
+                                ) : null}
                               </Text>
                             </Flex>
-                          </NextLink>
-                        </Td>
-                      </Tr>
+                          </Td>
+                        </Tr>
+                      </NextLink>
                     ))}
                   </Tbody>
                 </Table>
               ) : (
-                <Text p="20px">{isSearching ? "Searching..." : "No Results Found"}</Text>
+                <Text p="20px">
+                  {isSearching ? "Searching..." : "No Results Found"}
+                </Text>
               )}
             </Box>
           )}
