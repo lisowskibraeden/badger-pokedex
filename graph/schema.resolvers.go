@@ -201,7 +201,7 @@ func (r *queryResolver) Allpokenoalt(ctx context.Context) ([]*model.Pokemon, err
 	return pokemen, nil
 }
 
-func (r *queryResolver) Search(ctx context.Context, query string) ([]*model.Pokemon, error) {
+func (r *queryResolver) Imagename(ctx context.Context, image string) ([]*model.Pokemon, error) {
 	if db == nil {
 		var err error
 		db, err = sqlx.Open("sqlite3", "./PokemonDatabase.db")
@@ -210,16 +210,51 @@ func (r *queryResolver) Search(ctx context.Context, query string) ([]*model.Poke
 		}
 	}
 	db.MapperFunc(func(s string) string { return s })
+	statement, err := db.Preparex("SELECT * FROM Pokemon WHERE Image=?")
+	if err != nil {
+		return nil, err
+	}
+	defer statement.Close()
+	rows, err := statement.Queryx(image)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var pokemen []*model.Pokemon
+	for rows.Next() {
+		i := model.Pokemon{}
+		err := rows.StructScan(&i)
+		if err != nil {
+			return nil, err
+		}
+		pokemen = append(pokemen, &i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return pokemen, nil
+}
+
+func (r *queryResolver) Search(ctx context.Context, query string, page int, limit int) ([]*model.Pokemon, error) {
+	if db == nil {
+		var err error
+		db, err = sqlx.Open("sqlite3", "./PokemonDatabase.db")
+		if err != nil {
+			return nil, err
+		}
+	}
+	offset := (limit * page) - limit
+	db.MapperFunc(func(s string) string { return s })
 	if number, err := strconv.Atoi(query); err == nil {
 		if err != nil {
 			return nil, err
 		}
-		statement, err := db.Preparex("SELECT * FROM Pokemon WHERE Num = ?")
+		statement, err := db.Preparex("SELECT * FROM Pokemon WHERE Num = ? ORDER BY Num LIMIT ? OFFSET ?")
 		if err != nil {
 			return nil, err
 		}
 		defer statement.Close()
-		rows, err := statement.Queryx(number)
+		rows, err := statement.Queryx(number, limit, offset)
 		_ = rows
 		if err != nil {
 			return nil, err
@@ -240,12 +275,12 @@ func (r *queryResolver) Search(ctx context.Context, query string) ([]*model.Poke
 		return pokemen, nil
 
 	} else {
-		statement, err := db.Preparex("SELECT * FROM Pokemon WHERE Name LIKE ?")
+		statement, err := db.Preparex("SELECT * FROM Pokemon WHERE Name LIKE ? ORDER BY  LIMIT ? OFFSET ?")
 		if err != nil {
 			return nil, err
 		}
 		defer statement.Close()
-		rows, err := statement.Queryx(query + "%")
+		rows, err := statement.Queryx("%"+query+"%", limit, offset)
 		_ = rows
 		if err != nil {
 			return nil, err
