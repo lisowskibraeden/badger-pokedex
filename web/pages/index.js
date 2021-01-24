@@ -42,7 +42,7 @@ export default function Home({ pokemons }) {
   return (
     <div className="container">
       <Head>
-        <title>Create Next App</title>
+        <title>Badger Pokedex</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

@@ -21,14 +21,14 @@ import {
 import Head from "next/head";
 import Header from "components/header";
 import NextLink from "next/link";
-import { FaArrowDown } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
 import { PokemonSlugs, typeColors, typeTextColors } from "pokemon";
 
 export default function Pokemon({ pokemons, evolutions, previous, next }) {
   return (
     <div className="container">
       <Head>
-        <title>Create Next App</title>
+        <title>{pokemons[0].name} - Badger Pokedex</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -209,18 +209,18 @@ export default function Pokemon({ pokemons, evolutions, previous, next }) {
                   <Heading size="lg" mt="-10px" mb="10px">
                     Evolutions
                   </Heading>
-                  <Stack alignItems="center">
+                  <Stack alignItems="center" direction="row">
                     {evolutions.map((stage, i) => (
                       <>
                         {i != 0 && (
                           <Icon
                             w="7"
                             h="7"
-                            as={FaArrowDown}
+                            as={FaArrowRight}
                             color="gray.500"
                           />
                         )}
-                        <Wrap key={stage[0].name + i} justify="center">
+                        <Wrap key={stage[0].name + i} justify="center" maxW="400px">
                           {stage
                             .filter((p) => !p.alternate)
                             .map((p) => (
