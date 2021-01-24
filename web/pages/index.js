@@ -119,7 +119,7 @@ export default function Home({ pokemons }) {
 export async function getStaticProps() {
   // Call an external API endpoint to get posts.
   // You can use any data fetching library
-  const res = await fetch("http://45.76.230.252:8080/query", {
+  const res = await fetch("https://pokemon.winans.codes/query", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

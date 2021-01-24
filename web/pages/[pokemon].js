@@ -285,7 +285,7 @@ export async function getStaticPaths() {
 }
 
 async function getPreEvolution(id) {
-  const res = await fetch("http://45.76.230.252:8080/query", {
+  const res = await fetch("https://pokemon.winans.codes/query", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -303,7 +303,7 @@ async function getPreEvolution(id) {
 }
 
 async function getEvolutions(id) {
-  const res = await fetch("http://45.76.230.252:8080/query", {
+  const res = await fetch("https://pokemon.winans.codes/query", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -321,7 +321,7 @@ async function getEvolutions(id) {
 }
 
 async function getPokeNum(num) {
-  const res = await fetch("http://45.76.230.252:8080/query", {
+  const res = await fetch("https://pokemon.winans.codes/query", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -337,7 +337,7 @@ async function getPokeNum(num) {
 export async function getStaticProps({ params }) {
   // Call an external API endpoint to get posts.
   // You can use any data fetching library
-  const res = await fetch("http://45.76.230.252:8080/query", {
+  const res = await fetch("https://pokemon.winans.codes/query", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

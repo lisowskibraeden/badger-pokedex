@@ -53,7 +53,7 @@ const Logo = (props) => (
 );
 
 async function getSearchResults(query) {
-const res = await fetch("http://45.76.230.252:8080/query", {
+const res = await fetch("https://pokemon.winans.codes/query", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
