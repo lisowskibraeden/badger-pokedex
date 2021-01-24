@@ -1,13 +1,20 @@
 import {
+  Box,
   chakra,
   Flex,
   HStack,
   Icon,
   IconButton,
+  Image,
   Input,
   InputGroup,
   InputLeftElement,
   Link,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Tr,
   useColorMode,
   useColorModeValue,
   useDisclosure,
@@ -15,7 +22,7 @@ import {
 } from "@chakra-ui/react";
 import { useViewportScroll } from "framer-motion";
 import NextLink from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaMoon, FaSun, FaSearch } from "react-icons/fa";
 
 const GithubIcon = (props) => (
@@ -45,6 +52,46 @@ const Logo = (props) => (
   </svg>
 );
 
+async function getSearchResults(query) {
+const res = await fetch("https://pokemon.winans.codes/query", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    query:
+      '{ search(page: 1, limit: 10, query: "' +
+      query +
+      '") {num name classification primType secType image}}',
+  }),
+});
+const { search } = (await res.json()).data;
+
+return search;
+}
+
+function useDebounce(value, delay) {
+  // State and setters for debounced value
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(
+    () => {
+      // Set debouncedValue to value (passed in) after the specified delay
+      const handler = setTimeout(() => {
+        setDebouncedValue(value);
+      }, delay);
+
+      return () => {
+        clearTimeout(handler);
+      };
+    },
+
+    [value]
+  );
+
+  return debouncedValue;
+}
+
 function HeaderContent() {
   const mobileNav = useDisclosure();
 
@@ -53,6 +100,21 @@ function HeaderContent() {
   const SwitchIcon = useColorModeValue(FaMoon, FaSun);
 
   const [query, updateQuery] = useState('');
+
+  const [isSearching, setIsSearching] = useState(false);
+
+
+  const debouncedQuery = useDebounce(query, 300);
+
+  const [searchResults, updateSearchResults] = useState([]);
+
+  useEffect(async () => {
+    if (debouncedQuery) {
+      setIsSearching(true);
+      updateSearchResults(await getSearchResults(debouncedQuery));
+      setIsSearching(false);
+    }
+  }, [debouncedQuery]);
 
   return (
     <>
@@ -79,6 +141,8 @@ function HeaderContent() {
           align="center"
           maxW="600px"
           color="gray.400"
+          position="relative"
+          className="searchFocus"
         >
           <InputGroup width="100%">
             <InputLeftElement
@@ -93,8 +157,70 @@ function HeaderContent() {
                 />
               }
             />
-            <Input placeHolder="Search" variant="filled" value={query} onChange={e => updateQuery(e.target.value)} />
+            <Input
+              placeHolder="Search"
+              variant="filled"
+              value={query}
+              onChange={(e) => updateQuery(e.target.value)}
+            />
           </InputGroup>
+          {query && (
+            <Box
+              position="absolute"
+              left={0}
+              top="100%"
+              width="100%"
+              backgroundColor={useColorModeValue("gray.50", "gray.700")}
+              borderWidth="1px"
+              zIndex={-1}
+              borderRadius="lg"
+              className="searchResults"
+            >
+              {searchResults.length && !isSearching ? (
+                <Table>
+                  <Tbody>
+                    {searchResults.map((r) => (
+                      <Tr key={r.num}>
+                        <Td>
+                          <NextLink href={"/" + r.image}>
+                            <Flex
+                              alignItems="center"
+                              onClick={() => updateQuery("")}
+                              cursor="pointer"
+                            >
+                              <Box
+                                borderRadius="lg"
+                                overflow="hidden"
+                                background="#fff"
+                                mr="15px"
+                              >
+                                <Image
+                                  boxSize="40px"
+                                  objectFit="contain"
+                                  src={"/pictures/small/" + r.image + ".png"}
+                                  alt={r.name}
+                                  fallback={<Box width="40px" height="40px" />}
+                                />
+                              </Box>
+                              <Text mr="15px">
+                                {r.name} - #{r.num.toString().padStart(3, "0")}
+                              </Text>
+                              <Text>
+                                {r.primType}
+                                {r.secType ? " - " + r.secType : null}
+                              </Text>
+                            </Flex>
+                          </NextLink>
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              ) : (
+                <Text p="20px">{isSearching ? "Searching..." : "No Results Found"}</Text>
+              )}
+            </Box>
+          )}
         </Flex>
 
         <Flex justify="flex-end" align="center" color="gray.400" flexShrink="0">

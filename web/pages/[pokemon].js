@@ -16,12 +16,13 @@ import {
   Progress,
   Tr,
   Td,
+  Tag,
 } from "@chakra-ui/react";
 import Head from "next/head";
 import Header from "components/header";
 import NextLink from "next/link";
 import { FaArrowDown } from "react-icons/fa";
-import { PokemonSlugs } from "pokemon";
+import { PokemonSlugs, typeColors, typeTextColors } from "pokemon";
 
 export default function Pokemon({ pokemons, evolutions, previous, next }) {
   return (
@@ -69,32 +70,50 @@ export default function Pokemon({ pokemons, evolutions, previous, next }) {
                   padding="20px"
                   mb="20px"
                 >
-                  <Heading>
-                    {pokemons[0].name}
-                    <span>
-                      {" "}
-                      - #{pokemons[0].num.toString().padStart(3, "0")}
-                    </span>
-                  </Heading>
-                  <Box
-                    borderRadius="lg"
-                    overflow="hidden"
-                    background="#fff"
-                    width="384px"
-                  >
-                    <Image
-                      boxSize="384px"
-                      objectFit="contain"
-                      src={"/pictures/" + pokemons[0].image + ".jpg"}
-                      alt={pokemons[0].name}
-                      fallback={<Box width="384px" height="384px" />}
-                    />
-                  </Box>
-                  <Heading>{pokemons[0].classification}</Heading>
-                  <span>
-                    {pokemons[0].primType}
-                    {pokemons[0].secType ? " - " + pokemons[0].secType : null}
-                  </span>
+                  <Stack>
+                    <Heading>
+                      {pokemons[0].name}
+                      <span>
+                        {" "}
+                        - #{pokemons[0].num.toString().padStart(3, "0")}
+                      </span>
+                    </Heading>
+                    <Box
+                      borderRadius="lg"
+                      overflow="hidden"
+                      background="#fff"
+                      width="384px"
+                    >
+                      <Image
+                        boxSize="384px"
+                        objectFit="contain"
+                        src={"/pictures/" + pokemons[0].image + ".jpg"}
+                        alt={pokemons[0].name}
+                        fallback={<Box width="384px" height="384px" />}
+                      />
+                    </Box>
+                    <Heading size="md">{pokemons[0].classification}</Heading>
+                    <div>
+                      <Tag
+                        size="lg"
+                        mr="5px"
+                        ml="5px"
+                        bgColor={typeColors[pokemons[0].primType]}
+                        color={typeTextColors[pokemons[0].primType]}
+                      >
+                        {pokemons[0].primType}
+                      </Tag>
+                      {pokemons[0].secType ? (
+                        <Tag
+                          size="lg"
+                          bgColor={typeColors[pokemons[0].secType]}
+                          color={typeTextColors[pokemons[0].secType]}
+                        >
+                          {pokemons[0].secType}
+                        </Tag>
+                      ) : null}
+                    </div>
+                  </Stack>
                 </Container>
                 <Container borderRadius="lg" borderWidth="1px" padding="20px">
                   <Heading size="md">Stats</Heading>
@@ -175,7 +194,7 @@ export default function Pokemon({ pokemons, evolutions, previous, next }) {
                   </Table>
                 </Container>
               </Flex>
-              <Stack>
+              <Stack alignItems="center">
                 {evolutions.map((stage, i) => (
                   <>
                     {i != 0 && <Icon as={FaArrowDown} />}
@@ -191,10 +210,12 @@ export default function Pokemon({ pokemons, evolutions, previous, next }) {
                                 background="#fff"
                                 width="128px"
                                 cursor="pointer"
-                                borderWidth={
-                                  p.num == pokemons[0].num ? "5px" : "0px"
+                                borderWidth="5px"
+                                borderColor={
+                                  p.num == pokemons[0].num
+                                    ? "cyan.500"
+                                    : "gray.500"
                                 }
-                                borderColor="cyan.500"
                               >
                                 <Image
                                   boxSize="128px"
@@ -264,7 +285,7 @@ export async function getStaticPaths() {
 }
 
 async function getPreEvolution(id) {
-  const res = await fetch("http://localhost:8080/query", {
+  const res = await fetch("https://pokemon.winans.codes/query", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -282,7 +303,7 @@ async function getPreEvolution(id) {
 }
 
 async function getEvolutions(id) {
-  const res = await fetch("http://localhost:8080/query", {
+  const res = await fetch("https://pokemon.winans.codes/query", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -300,7 +321,7 @@ async function getEvolutions(id) {
 }
 
 async function getPokeNum(num) {
-  const res = await fetch("http://localhost:8080/query", {
+  const res = await fetch("https://pokemon.winans.codes/query", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -316,7 +337,7 @@ async function getPokeNum(num) {
 export async function getStaticProps({ params }) {
   // Call an external API endpoint to get posts.
   // You can use any data fetching library
-  const res = await fetch("http://localhost:8080/query", {
+  const res = await fetch("https://pokemon.winans.codes/query", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

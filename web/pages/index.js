@@ -51,7 +51,6 @@ export default function Home({ pokemons }) {
         <Box mt={{ base: "60px", md: "120px" }} mb="60px">
           <Container maxWidth="1200px">
             <Stack mb={{ base: "-40px" }}>
-              <Heading size="lg">Jump to Generation</Heading>
               <Wrap spacing="20px">
                 {generations.map((gen, index) => (
                   <WrapItem key={"#gen" + (index + 1)}>
@@ -120,7 +119,7 @@ export default function Home({ pokemons }) {
 export async function getStaticProps() {
   // Call an external API endpoint to get posts.
   // You can use any data fetching library
-  const res = await fetch("http://localhost:8080/query", {
+  const res = await fetch("https://pokemon.winans.codes/query", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
