@@ -22,7 +22,7 @@ export const typeColors = {
 export const typeTextColors = {
   Grass: "black",
   Water: "black",
-  Dragon: "black",
+  Dragon: "white",
   Fairy: "black",
   Steel: "black",
   Normal: "black",

@@ -9,6 +9,7 @@ export default function PokeTile(props) {
     <Link href={"/" + props.image}>
       <div className="pokeTile">
         <Box borderRadius="lg" overflow="hidden" background="#fff">
+          <LazyLoad height={64} offset={64}>
             <Image
               boxSize="64px"
               objectFit="contain"
@@ -16,6 +17,7 @@ export default function PokeTile(props) {
               alt={props.name}
               fallback={<Box width="64px" height="64px" />}
             />
+          </LazyLoad>
         </Box>
         <span>#{props.num.toString().padStart(3, "0")}</span>
         <div>{props.name}</div>
