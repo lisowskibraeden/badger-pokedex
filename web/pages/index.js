@@ -2,6 +2,7 @@ import { Box, Button, Container, Heading, Link, Stack, Wrap, WrapItem } from "@c
 import Head from "next/head";
 import Header from "components/header";
 import PokeTile from "components/poke-tile";
+import LazyLoad from "react-lazyload";
 
 const generations = [
   {
@@ -74,13 +75,15 @@ export default function Home({ pokemons }) {
                   >
                     Generation {index + 1}
                   </Heading>
-                  <Wrap spacing="0px">
-                    {pokemons.slice(gen.start - 1, gen.end).map((p) => (
-                      <WrapItem key={p.num} width="12.5%" minWidth="145px">
-                        <PokeTile {...p} />
-                      </WrapItem>
-                    ))}
-                  </Wrap>
+                  <LazyLoad height={Math.ceil((gen.end - gen.start + 1) / 8) * 140} offset={280} unmountIfInvisible>
+                    <Wrap spacing="0px">
+                      {pokemons.slice(gen.start - 1, gen.end).map((p) => (
+                        <WrapItem key={p.num} width="12.5%" minWidth="145px">
+                          <PokeTile {...p} />
+                        </WrapItem>
+                      ))}
+                    </Wrap>
+                  </LazyLoad>
                 </Stack>
               ))}
             </Stack>
